@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아침 교실 화면</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Jua', 'Noto Sans KR', sans-serif;
+            background-color: #f3eedd;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-date { font-size: 24pt; }
+        .text-slogan { font-size: 32pt; }
+        .text-timer { font-size: 18vw; line-height: 0.85; margin-top: -1rem; text-align: center; } 
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            padding: 1.5rem;
+            gap: 1.5rem;
+            box-sizing: border-box;
+        }
+
+        .col-1 {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .card {
+            background-color: #fffdf8;
+            border: 3px solid #374151;
+            border-radius: 1.25rem;
+            box-shadow: 2px 4px 0px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .row-1 { flex: 0 0 auto; color: #374151; }
+        .row-2 { flex: 0 0 auto; color: #374151; }
+        .row-3 { 
+            flex: 1 1 auto; 
+            background-color: #245345; 
+            color: #f3eedd; 
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #374151;
+            border-radius: 1.25rem;
+            box-shadow: 2px 4px 0px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .row-4 { 
+            flex: 0 0 auto; 
+            flex-direction: column; 
+            align-items: stretch; 
+            padding: 1.5rem;
+        }
+
+        .col-2 {
+            background-color: #f3eedd;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow: hidden;
+        }
+
+        .list-header-card {
+            background-color: #fffdf8;
+            border: 3px solid #374151;
+            border-radius: 1.25rem;
+            box-shadow: 2px 4px 0px rgba(0, 0, 0, 0.1);
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .students-grid::-webkit-scrollbar { width: 6px; }
+        .students-grid::-webkit-scrollbar-track { background: transparent; }
+        .students-grid::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+        .student-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fffdf8;
+            border: 2px solid #374151;
+            border-radius: 2rem;
+            padding: 0.25rem 0.75rem;
+            height: 3.2rem;
+        }
+
+        .student-name {
+            font-size: 1.1rem;
+            color: #374151;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .book-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .book-input-wrapper {
+            border: 2px solid #374151;
+            border-radius: 0.75rem;
+            background: white;
+            padding: 0.1rem;
+            width: 3rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .book-input {
+            width: 100%;
+            text-align: center;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            color: #374151;
+            outline: none;
+            -moz-appearance: textfield;
+        }
+        .book-input::-webkit-outer-spin-button,
+        .book-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        .btn-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .counter-btn {
+            background-color: #bbf7d0;
+            border: 2px solid #374151;
+            cursor: pointer;
+            width: 1.8rem;
+            height: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .counter-btn.inc-btn { border-radius: 0.5rem 0.5rem 0 0; }
+        .counter-btn.dec-btn { border-radius: 0 0 0.5rem 0.5rem; }
+        .counter-btn:active { background-color: #86efac; }
+        
+        .counter-btn svg { width: 0.8rem; height: 0.8rem; fill: #374151; }
+
+        .submission-input-wrapper {
+            display: flex;
+            border: 2px solid #374151;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: white;
+            margin-top: 0.5rem;
+        }
+        .submission-input {
+            flex-grow: 1;
+            padding: 1rem;
+            border: none;
+            outline: none;
+            font-size: 2.4rem;
+            font-family: 'Jua', sans-serif;
+        }
+        .submission-btn {
+            background-color: #f26b5b;
+            color: white;
+            padding: 0 2rem;
+            font-size: 1.8rem;
+            border-left: 2px solid #374151;
+            cursor: pointer;
+        }
+        .submission-btn:active { background-color: #dc2626; }
+
+        .submission-list {
+            margin-top: 1rem;
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .submission-tag {
+            background-color: #dbeafe;
+            color: #1e40af;
+            border: 2px solid #374151;
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .delete-tag { cursor: pointer; color: #374151; }
+
+        .summary-badge {
+            background-color: #d1fae5;
+            color: #065f46;
+            border: 2px solid #374151;
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .add-student-wrapper {
+            display: flex;
+            border: 2px solid #374151;
+            border-radius: 1rem;
+            overflow: hidden;
+            background: white;
+        }
+        .add-student-input {
+            flex-grow: 1;
+            padding: 0.5rem;
+            border: none;
+            outline: none;
+            font-family: 'Jua', sans-serif;
+        }
+        .add-student-btn {
+            background-color: #fde68a;
+            color: #374151;
+            padding: 0 1rem;
+            border-left: 2px solid #374151;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="grid-container">
+    
+    <!-- Column 1: Info & Timer -->
+    <div class="col-1">
+        <!-- Row 1: Date -->
+        <div class="card row-1 text-date" id="dateDisplay">
+            <!-- Date will be injected here -->
+        </div>
+
+        <!-- Row 2: Slogan -->
+        <div class="card row-2 text-slogan">
+            쉿! 우리 반은 도서관
+        </div>
+
+        <!-- Row 3: Timer -->
+        <div class="row-3">
+            <div class="text-sm opacity-80 mb-2 font-sans tracking-widest text-[#a7f3d0]">9:10까지 남은 시간</div>
+            <div class="text-timer" id="timerDisplay">00:00</div>
+        </div>
+
+        <!-- Row 4: Submissions -->
+        <div class="card row-4">
+            <div class="flex justify-between items-center w-full">
+                <h3 class="text-xl text-gray-700">오늘의 제출물</h3>
+                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full border border-green-300 font-sans">입력 후 추가</span>
+            </div>
+            <div class="submission-input-wrapper w-full">
+                <input type="text" id="submissionInput" class="submission-input" placeholder="제출물을 입력하세요">
+                <button class="submission-btn" onclick="addSubmission()">추가</button>
+            </div>
+            <ul id="submissionList" class="submission-list w-full">
+                <!-- Submission tags will be added here -->
+            </ul>
+        </div>
+    </div>
+
+    <!-- Column 2: Student List & Book Count -->
+    <div class="col-2">
+        <div class="list-header-card">
+            <div class="flex justify-between items-center">
+                <h2 class="text-2xl text-gray-800">우리 반 독서 기록</h2>
+                <div class="summary-badge" id="summaryBadge">0명 · 총 0권</div>
+            </div>
+            <div class="add-student-wrapper">
+                <input type="text" id="newStudentInput" class="add-student-input text-sm" placeholder="새 학생 이름" onkeypress="if(event.key === 'Enter') addNewStudent()">
+                <button class="add-student-btn" onclick="addNewStudent()">학생 추가</button>
+            </div>
+        </div>
+        
+        <div id="studentListContainer" class="flex-grow grid grid-cols-2 gap-x-3 gap-y-2 overflow-y-auto students-grid content-start pr-1 pb-4">
+            <!-- Student list items will be injected here by JS -->
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const defaultStudents = ["강리우", "강민준", "권하윤", "김건률", "김로빈", "김재현", "김주현", "김하린", "남기태", "박지안", "손예솔", "신수아", "안도은", "이서준", "임제인", "조시은", "홍은지", "황준우"];
+    
+    let appState = {
+        students: [...defaultStudents],
+        bookCounts: {},
+        submissions: []
+    };
+
+    // DOM Elements
+    const dateDisplay = document.getElementById('dateDisplay');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const submissionInput = document.getElementById('submissionInput');
+    const submissionList = document.getElementById('submissionList');
+    const studentListContainer = document.getElementById('studentListContainer');
+    const summaryBadge = document.getElementById('summaryBadge');
+    const newStudentInput = document.getElementById('newStudentInput');
+
+    function loadState() {
+        const savedData = localStorage.getItem('morningClassData');
+        if (savedData) {
+            try {
+                const parsed = JSON.parse(savedData);
+                appState.students = parsed.students || [...defaultStudents];
+                appState.bookCounts = parsed.bookCounts || {};
+                appState.submissions = parsed.submissions || [];
+            } catch (e) {
+                console.error("Error loading data", e);
+            }
+        }
+    }
+
+    function saveState() {
+        localStorage.setItem('morningClassData', JSON.stringify(appState));
+    }
+
+    function initApp() {
+        loadState();
+        updateDate();
+        startTimer();
+        
+        appState.students.forEach(student => {
+            if (appState.bookCounts[student] === undefined) {
+                appState.bookCounts[student] = 0;
+            }
+        });
+
+        renderStudentList();
+        renderSubmissions();
+        setupEventListeners();
+    }
+
+    function updateDate() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1;
+        const date = now.getDate();
+        const days = ['일', '월', '화', '수', '목', '금', '토'];
+        const day = days[now.getDay()];
+        
+        dateDisplay.textContent = `${year}년 ${month}월 ${date}일 ${day}요일`;
+    }
+
+    function startTimer() {
+        setInterval(() => {
+            const now = new Date();
+            
+            // Set target to today at 09:10:00
+            const target = new Date();
+            target.setHours(9, 10, 0, 0);
+
+            const distance = target.getTime() - now.getTime();
+
+            if (distance <= 0) {
+                timerDisplay.textContent = "00:00";
+                timerDisplay.style.color = "#ef4444"; // Red when time is up
+                return;
+            }
+
+            const minutes = Math.floor(distance / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            const mDisplay = minutes < 10 ? "0" + minutes : minutes;
+            const sDisplay = seconds < 10 ? "0" + seconds : seconds;
+
+            timerDisplay.textContent = `${mDisplay}:${sDisplay}`;
+
+            if (minutes < 5) {
+                timerDisplay.style.color = "#fcd34d"; // Yellow warning
+            } else {
+                timerDisplay.style.color = "#f3eedd"; // Normal beige
+            }
+
+        }, 1000);
+    }
+
+    function renderStudentList() {
+        studentListContainer.innerHTML = '';
+        
+        const sortedStudents = [...appState.students].sort();
+        let totalBooks = 0;
+
+        sortedStudents.forEach((student) => {
+            const count = appState.bookCounts[student] || 0;
+            totalBooks += count;
+            
+            const item = document.createElement('div');
+            item.className = 'student-item';
+            
+            item.innerHTML = `
+                <div class="student-name" title="${student}">
+                    ${student}
+                </div>
+                <div class="book-counter">
+                    <div class="book-input-wrapper">
+                        <input type="number" class="book-input" data-name="${student}" value="${count}" min="0" max="999">
+                    </div>
+                    <div class="btn-controls">
+                        <button class="counter-btn inc-btn" data-name="${student}">
+                            <svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg>
+                        </button>
+                        <button class="counter-btn dec-btn" data-name="${student}">
+                            <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            studentListContainer.appendChild(item);
+        });
+
+        summaryBadge.textContent = `${sortedStudents.length}명 · 총 ${totalBooks}권`;
+        attachCounterEvents();
+    }
+
+    function attachCounterEvents() {
+        document.querySelectorAll('.dec-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const name = e.currentTarget.dataset.name;
+                updateBookCount(name, -1);
+            });
+        });
+
+        document.querySelectorAll('.inc-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const name = e.currentTarget.dataset.name;
+                updateBookCount(name, 1);
+            });
+        });
+
+        document.querySelectorAll('.book-input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const name = e.target.dataset.name;
+                let val = parseInt(e.target.value);
+                if (isNaN(val) || val < 0) val = 0;
+                if (val > 999) val = 999;
+                
+                appState.bookCounts[name] = val;
+                e.target.value = val;
+                saveState();
+                renderSummaryOnly();
+            });
+        });
+    }
+
+    function updateBookCount(studentName, change) {
+        let currentCount = appState.bookCounts[studentName] || 0;
+        let newCount = currentCount + change;
+        
+        if (newCount < 0) newCount = 0;
+        if (newCount > 999) newCount = 999;
+
+        appState.bookCounts[studentName] = newCount;
+        
+        const input = document.querySelector(`.book-input[data-name="${studentName}"]`);
+        if (input) input.value = newCount;
+
+        saveState();
+        renderSummaryOnly();
+    }
+    
+    function renderSummaryOnly() {
+        let totalBooks = 0;
+        for (const name in appState.bookCounts) {
+            if(appState.students.includes(name)) {
+                totalBooks += appState.bookCounts[name] || 0;
+            }
+        }
+        summaryBadge.textContent = `${appState.students.length}명 · 총 ${totalBooks}권`;
+    }
+
+    window.addNewStudent = () => {
+        const name = newStudentInput.value.trim();
+        if (name && !appState.students.includes(name)) {
+            appState.students.push(name);
+            appState.bookCounts[name] = 0;
+            newStudentInput.value = '';
+            saveState();
+            renderStudentList();
+        }
+    };
+
+    window.addSubmission = () => {
+        const val = submissionInput.value.trim();
+        if (val) {
+            appState.submissions.push(val);
+            submissionInput.value = '';
+            saveState();
+            renderSubmissions();
+        }
+    };
+
+    function renderSubmissions() {
+        submissionList.innerHTML = '';
+        appState.submissions.forEach((sub, index) => {
+            const li = document.createElement('li');
+            li.className = 'submission-tag';
+            li.innerHTML = `
+                ${sub}
+                <span class="delete-tag" data-index="${index}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </span>
+            `;
+            submissionList.appendChild(li);
+        });
+
+        document.querySelectorAll('.delete-tag').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.dataset.index);
+                appState.submissions.splice(index, 1);
+                saveState();
+                renderSubmissions();
+            });
+        });
+    }
+
+    function setupEventListeners() {
+        submissionInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                window.addSubmission();
+            }
+        });
+    }
+
+    // Start execution
+    initApp();
+
+</script>
+</body>
+</html>
